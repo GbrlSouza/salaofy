@@ -15,7 +15,8 @@ switch ($id_perfil_logado) {
             'Configurações Globais' => ['href' => 'admin.php#config', 'icon' => 'bi-gear'],
             'Salões (Todos)' => ['href' => 'admin.php#saloes', 'icon' => 'bi-building'],
         ];
-        $perfilNome = "Admin";
+
+        $perfilNome = "Administrador";
         break;
 
     case 2: 
@@ -25,6 +26,7 @@ switch ($id_perfil_logado) {
             'Lista de Moradores' => ['href' => 'sindico.php#moradores', 'icon' => 'bi-people'],
             'Meus Salões' => ['href' => 'sindico.php#saloes', 'icon' => 'bi-geo-alt'],
         ];
+
         $perfilNome = "Síndico";
         break;
 
@@ -35,6 +37,7 @@ switch ($id_perfil_logado) {
             'Minhas Reservas' => ['href' => 'home.php#reservas', 'icon' => 'bi-calendar-check'],
             'Regras' => ['href' => 'home.php#saloes', 'icon' => 'bi-info-circle'],
         ];
+
         $perfilNome = "Morador";
         break;
 
@@ -43,6 +46,8 @@ switch ($id_perfil_logado) {
             header('Location: login.php');
             exit;
         }
+
+        $pageTitle = "Login | Salaofy"; 
         $perfilNome = "";
         $menuLinks = [];
         break;
@@ -51,12 +56,22 @@ switch ($id_perfil_logado) {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <title><?php echo $pageTitle; ?></title>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
+
+    <link rel="stylesheet" href="./../styles/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="styles/style-simples.css" rel="stylesheet">
+
+    <style>
+        .vh-100-minus-nav {
+            min-height: calc(100vh - 100px); 
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+    </style>
 </head>
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -81,12 +96,14 @@ switch ($id_perfil_logado) {
             </ul>
             
             <?php if ($id_perfil_logado > 0): ?>
-            <span class="navbar-text me-3"><?php echo $perfilNome; ?>: <?php echo htmlspecialchars($nome_usuario); ?></span>
+            <span class="navbar-text me-3">Olá, <?php echo htmlspecialchars($nome_usuario); ?>!</span>
             <div class="dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-person-circle fs-4"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><span class="dropdown-item">Acesso: <?php echo $perfilNome; ?></span></li>
+                    <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#">Meu Perfil</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="logout.php">Sair</a></li>
@@ -97,17 +114,4 @@ switch ($id_perfil_logado) {
     </div>
 </nav>
 
-<div class="container mt-4">
-<?php
-$pageTitle = "Painel do Síndico | Salaofy"; 
-
-require 'inc/header.php'; 
-?>
-
-<section id="overview" class="mb-5 p-4 bg-white rounded shadow-sm">
-    <h1 class="text-success">Dashboard do <?php echo $perfilNome; ?></h1>
-    </section>
-
-<section id="aprovar"></section>
-
-<?php require 'inc/footer.php'; ?>
+<div class="container my-4">

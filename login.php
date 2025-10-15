@@ -28,8 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else { $mensagem_erro = 'Por favor, preencha todos os campos.'; }
 }
 
-$pageTitle = "Login | Salaofy"; 
-
 require './inc/header.php'; 
 ?>
 
@@ -38,7 +36,7 @@ require './inc/header.php';
         <div class="card-body">
             
             <div class="text-center mb-4">
-                <h1 class="text-primary fw-bold">Salaofy</h1>
+                <h1 class="text-primary fw-bold">SalaoFy</h1>
                 <p class="text-muted">Acesso ao Sistema de Reservas</p>
             </div>
 
@@ -49,12 +47,11 @@ require './inc/header.php';
             <?php endif; ?>
 
             <form action="login.php" method="POST">
-                
                 <div class="mb-3">
                     <label for="cpf" class="form-label">CPF</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Seu CPF (apenas números)" required maxlength="11" value="<?php echo $cpf_digitado; ?>">
+                        <input type="number" class="form-control" id="cpf" name="cpf" placeholder="Seu CPF (apenas números)" required maxlength="11" value="<?php echo $cpf_digitado; ?>">
                     </div>
                 </div>
                 
@@ -85,11 +82,3 @@ require './inc/header.php';
 </div>
 
 <?php require './inc/footer.php'; ?>
-
-<style>
-.vh-100-minus-nav {
-    min-height: calc(100vh - 100px); 
-    padding-top: 50px;
-    padding-bottom: 50px;
-}
-</style>

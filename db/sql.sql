@@ -61,4 +61,3 @@ CREATE TABLE agendamentos (
 );
 
 INSERT INTO perfis (id_perfil, nome_perfil) VALUES (1, 'Admin'), (2, 'Sindico'), (3, 'Morador');
-INSERT INTO usuarios (cpf, senha_hash, nome_completo, contato_celular, id_perfil) VALUES ('49697489858', SHA2('Gbrl_019', 256), 'Gabriel', '19989680054', 1);
