@@ -1,6 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-
+require_once './inc/bootstrap.php'; 
 require './func/usuarios.php'; 
 
 $mensagem_erro = '';
@@ -12,15 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $cpf_digitado = htmlspecialchars($cpf); 
 
-    global $conexao; 
-
     if (!empty($cpf) && !empty($senha) && isset($conexao)) {
         $usuarioManager = new Usuario($conexao);
-        $dados_usuario = $usuarioManager -> autenticar($cpf, $senha);
+        $dados_usuario = $usuarioManager->autenticar($cpf, $senha);
         
         if ($dados_usuario) {
             $_SESSION['usuario'] = $dados_usuario;
-            
             header('Location: home.php');
             exit;
             
@@ -33,20 +29,20 @@ require './inc/header.php';
 
 <div class="container d-flex justify-content-center align-items-center vh-100-minus-nav">
     <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <div class="card-header bg-white text-center border-0">
+            <h2 class="mb-0 text-primary"><i class="bi bi-building-fill me-2"></i> Salaofy Login</h2>
+            <p class="text-muted small">Acesso exclusivo para usuários cadastrados</p>
+        </div>
         <div class="card-body">
             
-            <div class="text-center mb-4">
-                <h1 class="text-primary fw-bold">SalaoFy</h1>
-                <p class="text-muted">Acesso ao Sistema de Reservas</p>
-            </div>
-
             <?php if ($mensagem_erro): ?>
             <div class="alert alert-danger" role="alert">
-                <?php echo $mensagem_erro; ?>
+                <?php echo htmlspecialchars($mensagem_erro); ?>
             </div>
             <?php endif; ?>
 
             <form action="login.php" method="POST">
+                
                 <div class="mb-3">
                     <label for="cpf" class="form-label">CPF</label>
                     <div class="input-group">

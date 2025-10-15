@@ -1,6 +1,4 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-
 $id_perfil_logado = $_SESSION['usuario']['id_perfil'] ?? 0; 
 $nome_usuario = $_SESSION['usuario']['nome_completo'] ?? 'Visitante';
 $pageTitle = $pageTitle ?? "Salaofy | Gestão Condominial"; 
@@ -24,65 +22,59 @@ switch ($id_perfil_logado) {
             'Dashboard' => ['href' => 'sindico.php#overview', 'icon' => 'bi-house-door'],
             'Aprovar Reservas' => ['href' => 'sindico.php#aprovar', 'icon' => 'bi-check-square'],
             'Lista de Moradores' => ['href' => 'sindico.php#moradores', 'icon' => 'bi-people'],
-            'Meus Salões' => ['href' => 'sindico.php#saloes', 'icon' => 'bi-geo-alt'],
+            'Gestão de Salões' => ['href' => 'sindico.php#saloes', 'icon' => 'bi-building'],
         ];
 
         $perfilNome = "Síndico";
         break;
 
-    case 3:
+    case 3: 
         $menuLinks = [
-            'Dashboard' => ['href' => 'home.php#overview', 'icon' => 'bi-house-door'], 
-            'Agendar Salão' => ['href' => 'home.php#agendar', 'icon' => 'bi-plus-square'],
-            'Minhas Reservas' => ['href' => 'home.php#reservas', 'icon' => 'bi-calendar-check'],
-            'Regras' => ['href' => 'home.php#saloes', 'icon' => 'bi-info-circle'],
+            'Home' => ['href' => 'home.php', 'icon' => 'bi-house-door'],
+            'Minhas Reservas' => ['href' => 'morador.php#minhas_reservas', 'icon' => 'bi-calendar-check'],
+            'Novo Agendamento' => ['href' => 'morador.php#agendar', 'icon' => 'bi-plus-square'],
         ];
 
         $perfilNome = "Morador";
         break;
+    
+    default:
+        $menuLinks = [
+            'Home' => ['href' => 'index.php', 'icon' => 'bi-house-door'],
+            'Login' => ['href' => 'login.php', 'icon' => 'bi-box-arrow-in-right'],
+            'Cadastrar' => ['href' => 'cadastrar.php', 'icon' => 'bi-person-plus'],
+        ];
 
-    default: 
-        if (basename($_SERVER['PHP_SELF']) != 'login.php') {
-            header('Location: login.php');
-            exit;
-        }
-
-        $pageTitle = "Login | Salaofy"; 
-        $perfilNome = "";
-        $menuLinks = [];
+        $perfilNome = "Visitante";
         break;
 }
+
 ?>
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <title><?php echo $pageTitle; ?></title>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="./../styles/style.css">
+    <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <style>
         .vh-100-minus-nav {
-            min-height: calc(100vh - 100px); 
-            padding-top: 50px;
-            padding-bottom: 50px;
+            min-height: calc(100vh - 56px); 
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Salaofy</a>
+    <div class="container">
+        <a class="navbar-brand" href="index.php"><i class="bi bi-building-fill me-2"></i> Salaofy</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <?php 
+                <?php
                 foreach ($menuLinks as $label => $prop) {
                     $active = (basename($_SERVER['PHP_SELF']) == basename($prop['href'])) ? 'active' : '';
                     
@@ -113,5 +105,3 @@ switch ($id_perfil_logado) {
         </div>
     </div>
 </nav>
-
-<div class="container my-4">

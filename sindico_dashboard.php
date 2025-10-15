@@ -1,12 +1,10 @@
 <?php
-global $conexao;
-
 $id_usuario = $_SESSION['usuario']['id_usuario'];
 $nome_sindico = $_SESSION['usuario']['nome_completo'];
 
-require 'func/agendamento.php';
-require 'func/condominio.php';
-require 'func/saloes.php';
+require_once 'func/agendamento.php';
+require_once 'func/condominio.php';
+require_once 'func/saloes.php';
 
 $agendamentoManager = new Agendamento($conexao);
 $condominioManager = new Condominio($conexao);
@@ -24,7 +22,7 @@ $reservasPendentes = [
 
 <section id="overview" class="mb-5 p-4 bg-success text-white rounded shadow-sm">
     <h1 class="mb-4"><i class="bi bi-person-badge me-2"></i> Painel do Síndico</h1>
-    <p class="lead">Bem-vindo, Síndico **<?php echo htmlspecialchars($nome_sindico); ?>** do condomínio **<?php echo htmlspecialchars($nome_condominio); ?>**.</p>
+    <p class="lead">Bem-vindo, Síndico **<?php echo htmlspecialchars($nome_sindico); ?>**! Condomínio: **<?php echo htmlspecialchars($nome_condominio); ?>**</p>
     
     <div class="row g-4">
         <div class="col-lg-4 col-md-6">
@@ -36,14 +34,31 @@ $reservasPendentes = [
                 </div>
             </div>
         </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Salões Ativos</h5>
+                    <p class="card-text fs-3 fw-bold">2</p>
+                    <p class="card-text">Total de salões em seu condomínio.</p>
+                </div>
+            </div>
         </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total de Moradores</h5>
+                    <p class="card-text fs-3 fw-bold">150</p>
+                    <p class="card-text">Moradores vinculados ao condomínio.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <section id="aprovar" class="mb-5 p-4 bg-white rounded shadow">
-    <h2 class="mb-4 text-success"><i class="bi bi-check-square me-2"></i> Solicitações de Reserva</h2>
-    
+    <h2 class="mb-4 text-warning"><i class="bi bi-check-square me-2"></i> Aprovação de Reservas Pendentes</h2>
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Morador</th>
@@ -76,5 +91,6 @@ $reservasPendentes = [
 </section>
 
 <section id="saloes" class="mb-5 p-4 bg-light rounded shadow">
-    <h2 class="mb-4 text-success"><i class="bi bi-geo-alt me-2"></i> Meus Salões</h2>
+    <h2 class="mb-4 text-success"><i class="bi bi-geo-alt me-2"></i> Gestão de Salões</h2>
+    <p>Aqui o síndico gerencia as informações dos salões do condomínio (regras, preços, etc.).</p>
 </section>

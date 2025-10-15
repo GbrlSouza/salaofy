@@ -1,28 +1,18 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-
-$base_dir = __DIR__ . '/../';
-
-if (file_exists($base_dir . './../db/conexao.php')) { $conexao = require $base_dir . './../db/conexao.php'; } 
-elseif (file_exists('./db/conexao.php')) { $conexao = require './db/conexao.php'; }
-else { die("Erro fatal: Arquivo de conexão 'conexao.php' não encontrado em nenhum caminho esperado."); }
-
-if (!$conexao instanceof PDO) { die("Erro fatal: A conexão com o banco de dados falhou durante a inicialização."); }
-
 class Condominio {
     private $pdo;
 
-    public function __construct(PDO $pdo) { $this -> pdo = $pdo; }
+    public function __construct(PDO $pdo) { $this->pdo = $pdo; }
 
     public function criarCondominio(string $nome, string $cep): int|bool {
         $sql = "INSERT INTO condominios (nome_condominio, cep) VALUES (:nome, :cep)";
         
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         
-        $stmt -> bindParam(':nome', $nome);
-        $stmt -> bindParam(':cep', $cep);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':cep', $cep);
         
-        if ($stmt -> execute()) { return (int)$this -> pdo -> lastInsertId(); }
+        if ($stmt->execute()) { return (int)$this->pdo->lastInsertId(); }
 
         return false;
     }
@@ -30,68 +20,78 @@ class Condominio {
     public function buscarCondominio(int $id): array|bool {
         $sql = "SELECT id_condominio, nome_condominio, cep, id_sindico FROM condominios WHERE id_condominio = :id";
 
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-        $stmt -> bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt -> execute();
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
         
-        return $stmt -> fetch(PDO::FETCH_ASSOC); 
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
 
-    public function buscarCondominioPorCep(string $id): array|bool {
+    public function buscarCondominioPorCep(string $cep): array|bool {
         $sql = "SELECT id_condominio, nome_condominio, cep, id_sindico FROM condominios WHERE cep = :cep";
 
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-        $stmt -> bindParam(':cep', $id);
-        $stmt -> execute();
+        $stmt->bindParam(':cep', $cep);
+        $stmt->execute();
         
-        return $stmt -> fetch(PDO::FETCH_ASSOC); 
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
     }
 
-    public function editarCondominio(int $id): array|bool {
+    public function listarTodos(): array {
+        $sql = "SELECT c.*, u.nome_completo as nome_sindico 
+                FROM condominios c 
+                LEFT JOIN usuarios u ON c.id_sindico = u.id_usuario 
+                ORDER BY nome_condominio";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+    }
+
+    public function editarCondominio(int $id, string $nome, string $cep): bool {
         $sql = "UPDATE condominios SET nome_condominio = :nome, cep = :cep WHERE id_condominio = :id";
 
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-        $stmt -> bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt -> bindParam(':nome', $nome);
-        $stmt -> bindParam(':cep', $cep);
-        $stmt -> execute();
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':cep', $cep);
         
-        return $stmt -> fetch(PDO::FETCH_ASSOC); 
+        return $stmt->execute(); 
     }
 
-    public function deletarCondominio (int $id): array|bool {
+    public function deletarCondominio (int $id): bool {
         $sql = "DELETE FROM condominios WHERE id_condominio = :id";
 
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-        $stmt -> bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt -> execute();
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         
-        return $stmt -> fetch(PDO::FETCH_ASSOC); 
+        return $stmt->execute(); 
     }
 
     public function associarSindico(int $id_condominio, int $id_sindico): bool {
         $sql = "UPDATE condominios SET id_sindico = :id_sindico WHERE id_condominio = :id_condominio";
         
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         
-        $stmt -> bindParam(':id_sindico', $id_sindico, PDO::PARAM_INT);
-        $stmt -> bindParam(':id_condominio', $id_condominio, PDO::PARAM_INT);
+        $stmt->bindParam(':id_sindico', $id_sindico, PDO::PARAM_INT);
+        $stmt->bindParam(':id_condominio', $id_condominio, PDO::PARAM_INT);
         
-        return $stmt -> execute();
+        return $stmt->execute();
     }
     
     public function buscarPorSindico(int $id_sindico): array|bool {
-        $sql = "SELECT id_condominio, nome_condominio FROM condominios WHERE id_sindico = :id_sindico";
+        $sql = "SELECT id_condominio, nome_condominio, cep FROM condominios WHERE id_sindico = :id";
 
-        $stmt = $this -> pdo -> prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-        $stmt -> bindParam(':id_sindico', $id_sindico, PDO::PARAM_INT);
-        $stmt -> execute();
+        $stmt->bindParam(':id', $id_sindico, PDO::PARAM_INT);
+        $stmt->execute();
         
-        return $stmt -> fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

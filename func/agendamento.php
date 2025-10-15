@@ -1,14 +1,4 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-
-$base_dir = __DIR__ . '/../';
-
-if (file_exists($base_dir . './../db/conexao.php')) { $conexao = require $base_dir . './../db/conexao.php'; } 
-elseif (file_exists('./db/conexao.php')) { $conexao = require './db/conexao.php'; }
-else { die("Erro fatal: Arquivo de conexão 'conexao.php' não encontrado em nenhum caminho esperado."); }
-
-if (!$conexao instanceof PDO) { die("Erro fatal: A conexão com o banco de dados falhou durante a inicialização."); }
-
 class Agendamento
 {
     private $pdo;
@@ -36,7 +26,7 @@ class Agendamento
         
         try {
             $stmt = $this->pdo->prepare($sql);
-            
+
             $stmt->bindParam(':salao', $id_salao, PDO::PARAM_INT);
             $stmt->bindParam(':morador', $id_morador, PDO::PARAM_INT);
             $stmt->bindParam(':data', $data_evento);
@@ -71,11 +61,9 @@ class Agendamento
         $sql = "SELECT a.*, s.nome_salao 
                 FROM agendamentos a
                 JOIN saloes s ON a.id_salao = s.id_salao
-                WHERE a.id_morador = :morador
-                ORDER BY a.data_evento DESC";
+                WHERE a.id_morador = :morador";
         
         $stmt = $this->pdo->prepare($sql);
-
         $stmt->bindParam(':morador', $id_morador, PDO::PARAM_INT);
         $stmt->execute();
         

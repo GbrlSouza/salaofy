@@ -1,10 +1,8 @@
 <?php
-global $conexao;
-
 $nome_admin = $_SESSION['usuario']['nome_completo'];
 
-require 'func/usuario.php';
-require 'func/condominio.php';
+require_once 'func/usuarios.php';
+require_once 'func/condominio.php';
 
 $usuarioManager = new Usuario($conexao);
 $condominioManager = new Condominio($conexao);
@@ -51,8 +49,15 @@ $novosCadastros = 3;
 
 <section id="usuarios" class="mb-5 p-4 bg-white rounded shadow">
     <h2 class="mb-4 text-primary"><i class="bi bi-people me-2"></i> Gestão de Usuários</h2>
-    </section>
+    <p>Detalhes e ferramentas para gerenciamento de usuários...</p>
+</section>
 
 <section id="config" class="mb-5 p-4 bg-light rounded shadow">
     <h2 class="mb-4 text-primary"><i class="bi bi-gear me-2"></i> Configurações Globais</h2>
+    <p>Ajustes finos do sistema...</p>
+</section>
+
+<section id="saloes" class="mb-5 p-4 bg-white rounded shadow">
+    <h2 class="mb-4 text-primary"><i class="bi bi-building me-2"></i> Gestão de Salões</h2>
+    <p>Lista e gerenciamento de todos os salões em todos os condomínios...</p>
 </section>

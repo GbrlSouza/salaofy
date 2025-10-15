@@ -1,12 +1,10 @@
 <?php
-global $conexao;
-
 $id_usuario = $_SESSION['usuario']['id_usuario'];
 $nome_display = $_SESSION['usuario']['nome_completo'];
 
-require 'func/agendamento.php';
-require 'func/morador_condominio.php';
-require 'func/saloes.php';
+require_once 'func/agendamento.php';
+require_once 'func/morador_condominio.php';
+require_once 'func/saloes.php';
 
 $agendamentoManager = new Agendamento($conexao);
 $vinculoManager = new MoradorCondominio($conexao);
@@ -25,60 +23,71 @@ $proximaReserva = $proximaReserva[0] ?? null;
 $saloesDisponiveis = $id_condominio_morador ? $salaoManager->buscarSaloesPorCondominio($id_condominio_morador) : [];
 ?>
 
-<section id="overview" class="mb-5 p-4 bg-white rounded shadow-sm">
-    <h1 class="mb-4 text-primary"><i class="bi bi-house-door-fill me-2"></i> Dashboard</h1>
-    <p class="lead">Bem-vindo, **<?php echo htmlspecialchars($nome_display); ?>**! Você está no condomínio: **<?php echo htmlspecialchars($nome_condominio); ?>**.</p>
-
+<section id="overview" class="mb-5 p-4 bg-primary text-white rounded shadow-sm">
+    <h1 class="mb-4"><i class="bi bi-house-door me-2"></i> Painel do Morador</h1>
+    <p class="lead">Bem-vindo, **<?php echo htmlspecialchars($nome_display); ?>**! Seu condomínio atual: **<?php echo htmlspecialchars($nome_condominio); ?>**</p>
+    
     <div class="row g-4">
         <div class="col-lg-4 col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Minhas Reservas Ativas</h5>
+                    <p class="card-text fs-3 fw-bold"><?php echo count($minhasReservas); ?></p>
+                    <p class="card-text">Total de agendamentos solicitados.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-6">
             <div class="card bg-success text-white">
                 <div class="card-body">
-                    <h5 class="card-title">Próxima Reserva</h5>
+                    <h5 class="card-title">Próxima Reserva Confirmada</h5>
                     <?php if ($proximaReserva): ?>
-                        <p class="card-text fs-3 fw-bold"><?php echo htmlspecialchars($proximaReserva['nome_salao']); ?></p>
-                        <p class="card-text"><?php echo date('d/m/Y', strtotime($proximaReserva['data_evento'])); ?> (Confirmada)</p>
+                        <p class="card-text fs-3 fw-bold">
+                            <?php echo date('d/m/Y', strtotime($proximaReserva['data_evento'])); ?> - <?php echo htmlspecialchars($proximaReserva['nome_salao']); ?>
+                        </p>
+                        <p class="card-text">Status: <?php echo htmlspecialchars($proximaReserva['status']); ?></p>
                     <?php else: ?>
-                        <p class="card-text fs-3 fw-bold">Nenhuma</p>
-                        <p class="card-text">Sem reservas futuras confirmadas.</p>
+                        <p class="card-text fs-3 fw-bold">Nenhuma reserva futura.</p>
+                        <p class="card-text">Que tal agendar um evento?</p>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 </section>
 
-<section id="reservas" class="mb-5 p-4 bg-white rounded shadow">
-    <h2 class="mb-4 text-primary"><i class="bi bi-calendar-check me-2"></i> Minhas Reservas</h2>
-    
+<section id="minhas_reservas" class="mb-5 p-4 bg-white rounded shadow">
+    <h2 class="mb-4 text-success"><i class="bi bi-calendar-check me-2"></i> Histórico de Reservas</h2>
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Salão</th>
-                    <th>Data</th>
-                    <th>Status</th>
+                    <th>Data do Evento</th>
                     <th>Valor</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($minhasReservas)): ?>
-                    <?php foreach ($minhasReservas as $reserva): 
-                        $badgeClass = match($reserva['status']) {
-                            'Confirmada' => 'bg-success',
-                            'Pendente' => 'bg-warning text-dark',
-                            default => 'bg-danger'
-                        };
-                    ?>
+                    <?php foreach ($minhasReservas as $reserva): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($reserva['nome_salao']); ?></td>
                         <td><?php echo date('d/m/Y', strtotime($reserva['data_evento'])); ?></td>
-                        <td><span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($reserva['status']); ?></span></td>
                         <td>R$ <?php echo number_format($reserva['valor_total'], 2, ',', '.'); ?></td>
                         <td>
-                            <button class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i> Detalhes</button>
+                            <span class="badge 
+                                <?php echo $reserva['status'] == 'Confirmada' ? 'bg-success' : ''; ?>
+                                <?php echo $reserva['status'] == 'Pendente' ? 'bg-warning text-dark' : ''; ?>
+                                <?php echo in_array($reserva['status'], ['Rejeitada', 'Cancelada']) ? 'bg-danger' : ''; ?>
+                            ">
+                                <?php echo htmlspecialchars($reserva['status']); ?>
+                            </span>
+                        </td>
+                        <td>
                             <?php if ($reserva['status'] == 'Pendente' || $reserva['status'] == 'Confirmada'): ?>
-                                <a href="cancelar_reserva.php?id=<?php echo $reserva['id_agendamento']; ?>" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle"></i> Cancelar</a>
+                            <a href="processa_cancelamento.php?id=<?php echo $reserva['id_agendamento']; ?>" class="btn btn-sm btn-danger"><i class="bi bi-x-circle"></i> Cancelar</a>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -107,7 +116,18 @@ $saloesDisponiveis = $id_condominio_morador ? $salaoManager->buscarSaloesPorCond
                     <?php endforeach; ?>
                 </select>
             </div>
-            <input type="hidden" name="id_morador" value="<?php echo $id_usuario; ?>">
+            <div class="col-md-6">
+                <label for="dataEvento" class="form-label">Data do Evento</label>
+                <input type="date" class="form-control" id="dataEvento" name="data_evento" required min="<?php echo date('Y-m-d'); ?>">
+            </div>
+            <div class="col-12">
+                <label for="detalhes" class="form-label">Detalhes do Evento (Opcional)</label>
+                <textarea class="form-control" id="detalhes" name="detalhes" rows="2" maxlength="255"></textarea>
+            </div>
+            <input type="hidden" name="valor_base" id="valorBaseHidden">
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-calendar-plus me-2"></i> Solicitar Reserva</button>
+            </div>
         </div>
     </form>
 </section>
