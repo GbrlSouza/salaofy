@@ -3,8 +3,8 @@ global $conexao;
 
 $nome_admin = $_SESSION['usuario']['nome_completo'];
 
-require_once 'func/usuario.php';
-require_once 'func/condominio.php';
+require 'func/usuario.php';
+require 'func/condominio.php';
 
 $usuarioManager = new Usuario($conexao);
 $condominioManager = new Condominio($conexao);

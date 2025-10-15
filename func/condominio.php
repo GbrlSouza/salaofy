@@ -1,6 +1,6 @@
 <?php
-if (file_exists(__DIR__ . './../db/conexao.php')) { $conexao = require_once __DIR__ . './../db/conexao.php'; } 
-elseif (file_exists(__DIR__ . './db/conexao.php')) { $conexao = require_once __DIR__ . './db/conexao.php'; }
+if (file_exists(__DIR__ . './../db/conexao.php')) { $conexao = require __DIR__ . './../db/conexao.php'; } 
+elseif (file_exists(__DIR__ . './db/conexao.php')) { $conexao = require __DIR__ . './db/conexao.php'; }
 else { die("Erro fatal: Arquivo de conexão 'conexao.php' não encontrado em nenhum caminho esperado."); }
 
 if (!$conexao instanceof PDO) { die("Erro fatal: A conexão com o banco de dados falhou durante a inicialização."); }
@@ -29,6 +29,17 @@ class Condominio {
         $stmt = $this -> pdo -> prepare($sql);
 
         $stmt -> bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt -> execute();
+        
+        return $stmt -> fetch(PDO::FETCH_ASSOC); 
+    }
+
+    public function buscarCondominioPorCep(string $id): array|bool {
+        $sql = "SELECT id_condominio, nome_condominio, cep, id_sindico FROM condominios WHERE cep = :cep";
+
+        $stmt = $this -> pdo -> prepare($sql);
+
+        $stmt -> bindParam(':cep', $id);
         $stmt -> execute();
         
         return $stmt -> fetch(PDO::FETCH_ASSOC); 

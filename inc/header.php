@@ -101,17 +101,13 @@ switch ($id_perfil_logado) {
 <?php
 $pageTitle = "Painel do Síndico | Salaofy"; 
 
-require_once 'inc/header.php'; 
+require 'inc/header.php'; 
 ?>
 
-    <section id="overview" class="mb-5 p-4 bg-white rounded shadow-sm">
-        <h1 class="text-success">Dashboard do Síndico</h1>
-        <p class="lead">Olá Síndico! Você tem 5 reservas pendentes para análise.</p>
-        </section>
-    
-    <section id="aprovar">
-        </section>
+<section id="overview" class="mb-5 p-4 bg-white rounded shadow-sm">
+    <h1 class="text-success">Dashboard do <?php echo $perfilNome; ?></h1>
+    </section>
 
-<?php
-require_once 'inc/footer.php'; 
-?>
+<section id="aprovar"></section>
+
+<?php require 'inc/footer.php'; ?>

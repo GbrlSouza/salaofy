@@ -9,3 +9,9 @@ section {
 }
 
 .container { min-height: 80vh; }
+
+.vh-100-minus-nav {
+    min-height: calc(100vh - 100px); 
+    padding-top: 50px;
+    padding-bottom: 50px;
+}

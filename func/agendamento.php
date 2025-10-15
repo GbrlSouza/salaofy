@@ -1,6 +1,6 @@
 <?php
-if (file_exists(__DIR__ . './../db/conexao.php')) { $conexao = require_once __DIR__ . './../db/conexao.php'; } 
-elseif (file_exists(__DIR__ . './db/conexao.php')) { $conexao = require_once __DIR__ . './db/conexao.php'; }
+if (file_exists(__DIR__ . './../db/conexao.php')) { $conexao = require __DIR__ . './../db/conexao.php'; } 
+elseif (file_exists(__DIR__ . './db/conexao.php')) { $conexao = require __DIR__ . './db/conexao.php'; }
 else { die("Erro fatal: Arquivo de conexão 'conexao.php' não encontrado em nenhum caminho esperado."); }
 
 if (!$conexao instanceof PDO) { die("Erro fatal: A conexão com o banco de dados falhou durante a inicialização."); }

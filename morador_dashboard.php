@@ -4,9 +4,9 @@ global $conexao;
 $id_usuario = $_SESSION['usuario']['id_usuario'];
 $nome_display = $_SESSION['usuario']['nome_completo'];
 
-require_once 'func/agendamento.php';
-require_once 'func/morador_condominio.php';
-require_once 'func/saloes.php';
+require 'func/agendamento.php';
+require 'func/morador_condominio.php';
+require 'func/saloes.php';
 
 $agendamentoManager = new Agendamento($conexao);
 $vinculoManager = new MoradorCondominio($conexao);

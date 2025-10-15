@@ -1,5 +1,5 @@
 <?php
-require_once './func/condominio.php'; 
+require './func/condominio.php'; 
 
 $condominioManager = new Condominio($conexao);
 $idNovoCondominio = $condominioManager->criarCondominio("Residencial Salaofy", "12345678");
