@@ -28,19 +28,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mensagem_erro = 'A senha e a confirmação de senha não coincidem.'; 
     } elseif (strlen($cpf) !== 11) { 
         $mensagem_erro = 'O CPF deve ter 11 dígitos.'; 
-    } elseif ($usuarioManager->cpfJaExiste($cpf)) { 
+    } elseif ($usuarioManager -> cpfJaExiste($cpf)) { 
         $mensagem_erro = 'Este CPF já está cadastrado em nosso sistema.'; 
     } else {
-        $condominio = $condominioManager->buscarCondominioPorCep($cep);
+        $condominio = $condominioManager -> buscarCondominioPorCep($cep);
         
         if (!$condominio) { 
             $mensagem_erro = 'Condomínio não encontrado. Verifique o CEP ou contate a administração.';
         } else {
-            $id_novo_usuario = $usuarioManager->registrarUsuario($cpf, $senha, $nome, $celular, $id_perfil, $nome_social);
+            $id_novo_usuario = $usuarioManager -> registrarUsuario($cpf, $senha, $nome, $celular, $id_perfil, $nome_social);
 
             if ($id_novo_usuario) {
                 $id_condominio = $condominio['id_condominio'];
-                $vinculo_sucesso = $vinculoManager->adicionarVinculo($id_novo_usuario, $id_condominio);
+                $vinculo_sucesso = $vinculoManager -> adicionarVinculo($id_novo_usuario, $id_condominio);
 
                 if ($vinculo_sucesso) {
                     $mensagem_sucesso = "Cadastro concluído! Você já pode fazer login.";

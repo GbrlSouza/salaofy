@@ -8,9 +8,9 @@ require_once 'func/condominio.php';
 $usuarioManager = new Usuario($conexao);
 $condominioManager = new Condominio($conexao);
 
-$totalUsuarios = $usuarioManager->contarTotalUsuarios();
-$totalCondominios = $condominioManager->contarTotalCondominios(); 
-$novosCadastros = $usuarioManager->contarUsuariosPorPerfil($id_admin);
+$totalUsuarios = $usuarioManager -> contarTotalUsuarios();
+$totalCondominios = $condominioManager -> contarTotalCondominios(); 
+$novosCadastros = $usuarioManager -> contarUsuariosPorPerfil($id_admin);
 ?>
 <div class="container my-4">
     <section id="overview" class="mb-5 p-4 bg-primary text-white rounded shadow-sm">

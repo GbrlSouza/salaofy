@@ -10,17 +10,17 @@ $agendamentoManager = new Agendamento($conexao);
 $vinculoManager = new MoradorCondominio($conexao);
 $salaoManager = new Salao($conexao);
 
-$condominios = $vinculoManager->buscarCondominiosDoMorador($id_usuario);
+$condominios = $vinculoManager -> buscarCondominiosDoMorador($id_usuario);
 $id_condominio_morador = $condominios[0]['id_condominio'] ?? null;
 $nome_condominio = $condominios[0]['nome_condominio'] ?? 'N/D';
-$minhasReservas = $agendamentoManager->listarAgendamentosMorador($id_usuario);
+$minhasReservas = $agendamentoManager -> listarAgendamentosMorador($id_usuario);
 $proximaReserva = array_filter($minhasReservas, function($res) { return $res['status'] == 'Confirmada' && strtotime($res['data_evento']) >= time(); });
 
 usort($proximaReserva, function($a, $b) { return strtotime($a['data_evento']) - strtotime($b['data_evento']); });
 
 $proximaReserva = $proximaReserva[0] ?? null;
 
-$saloesDisponiveis = $id_condominio_morador ? $salaoManager->buscarSaloesPorCondominio($id_condominio_morador) : [];
+$saloesDisponiveis = $id_condominio_morador ? $salaoManager -> buscarSaloesPorCondominio($id_condominio_morador) : [];
 ?>
 
 <section id="overview" class="mb-5 p-4 bg-primary text-white rounded shadow-sm">

@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($cpf) && !empty($senha) && isset($conexao)) {
         $usuarioManager = new Usuario($conexao);
-        $dados_usuario = $usuarioManager->autenticar($cpf, $senha);
+        $dados_usuario = $usuarioManager -> autenticar($cpf, $senha);
         
         if ($dados_usuario) {
             $_SESSION['usuario'] = $dados_usuario;
