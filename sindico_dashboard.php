@@ -2,10 +2,13 @@
 $id_usuario = $_SESSION['usuario']['id_usuario'];
 $nome_sindico = $_SESSION['usuario']['nome_completo'];
 
+require 'func/morador_condominio.php';
+
 require_once 'func/agendamento.php';
 require_once 'func/condominio.php';
 require_once 'func/saloes.php';
 
+$vinculoManager = new MoradorCondominio($conexao); 
 $agendamentoManager = new Agendamento($conexao);
 $condominioManager = new Condominio($conexao);
 $salaoManager = new Salao($conexao);
@@ -14,10 +17,7 @@ $condominioSindico = $condominioManager -> buscarPorSindico($id_usuario);
 $id_condominio = $condominioSindico['id_condominio'] ?? null;
 $nome_condominio = $condominioSindico['nome_condominio'] ?? 'N/D';
 
-
-$reservasPendentes = [
-    ['id_agendamento' => 10, 'nome_salao' => 'Salão de Festas', 'data_evento' => '2025-11-20', 'morador_nome' => 'Maria Silva', 'valor_total' => 400.00]
-];
+$reservasPendentes = [ ['id_agendamento' => 10, 'nome_salao' => 'Salão de Festas', 'data_evento' => '2025-11-20', 'morador_nome' => 'Maria Silva', 'valor_total' => 400.00] ];
 
 $condominioSindico = $condominioManager -> buscarPorSindico($id_usuario);
 $id_condominio = $condominioSindico['id_condominio'] ?? null;
@@ -29,9 +29,9 @@ $reservasPendentes = [];
 $saloesCondominio = [];
 
 if ($id_condominio) {
-    $totalMoradores = $condominioManager -> contarMoradoresPorCondominio($id_condominio);
     $totalSaloes = $salaoManager -> contarSaloesPorCondominio($id_condominio);
     $saloesCondominio = $salaoManager -> buscarSaloesPorCondominio($id_condominio);
+    $totalMoradores = $vinculoManager -> contarMoradoresPorCondominio($id_condominio);
     $reservasPendentes = $agendamentoManager -> listarPendentesPorCondominio($id_condominio);
 }
 ?>

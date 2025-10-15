@@ -28,17 +28,6 @@ class Condominio {
         return $stmt -> fetch(PDO::FETCH_ASSOC); 
     }
 
-    public function buscarCondominioPorCep(string $cep): array|bool {
-        $sql = "SELECT id_condominio, nome_condominio, cep, id_sindico FROM condominios WHERE cep = :cep";
-
-        $stmt = $this -> pdo -> prepare($sql);
-
-        $stmt -> bindParam(':cep', $cep);
-        $stmt -> execute();
-        
-        return $stmt -> fetch(PDO::FETCH_ASSOC); 
-    }
-
     public function listarTodos(): array {
         $sql = "SELECT c.*, u.nome_completo as nome_sindico 
                 FROM condominios c 
@@ -104,6 +93,40 @@ class Condominio {
         } catch (PDOException $e) {
             error_log("Erro ao contar total de condomínios: " . $e -> getMessage());
             return 0;
+        }
+    }
+
+    public function criarCondominioComSindico(string $nome, string $cep, int $id_sindico): int|bool {
+        $sql = "INSERT INTO condominios (nome_condominio, cep, id_sindico) VALUES (:nome, :cep, :sindico)";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':cep', $cep);
+            $stmt->bindParam(':sindico', $id_sindico, PDO::PARAM_INT);
+            
+            if ($stmt->execute()) { return (int)$this->pdo->lastInsertId(); }
+
+            return false;
+        } catch (PDOException $e) {
+            error_log("Erro ao criar condomínio com síndico: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function buscarCondominioPorCep(string $cep): array|bool {
+        $sql = "SELECT id_condominio, nome_condominio, cep FROM condominios WHERE cep = :cep";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':cep', $cep);
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao buscar condomínio por CEP: " . $e->getMessage());
+            return false;
         }
     }
 }

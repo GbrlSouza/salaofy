@@ -6,8 +6,8 @@ $mensagem_erro = '';
 $cpf_digitado = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $cpf = filter_input(INPUT_POST, 'cpf', FILTER_SANITIZE_STRING);
-    $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING);
+    $cpf = filter_input(INPUT_POST, 'cpf', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
     $cpf_digitado = htmlspecialchars($cpf); 
 
