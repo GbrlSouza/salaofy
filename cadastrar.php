@@ -7,21 +7,21 @@ require_once __DIR__ . '/func/morador_condominio.php';
 
 $mensagem_sucesso = '';
 $mensagem_erro = '';
-$id_perfil = 3;
+$id_perfil = "";
 
 $usuarioManager = new Usuario($conexao);
 $condominioManager = new Condominio($conexao);
 $vinculoManager = new MoradorCondominio($conexao);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $nome = filter_input(INPUT_POST, 'nome', FILTER_DEFAULT);
     $cpf = filter_input(INPUT_POST, 'cpf', FILTER_SANITIZE_NUMBER_INT);
     $celular = filter_input(INPUT_POST, 'celular', FILTER_SANITIZE_NUMBER_INT);
-    $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $confirma_senha = filter_input(INPUT_POST, 'confirma_senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $senha = filter_input(INPUT_POST, 'senha', FILTER_DEFAULT);
+    $confirma_senha = filter_input(INPUT_POST, 'confirma_senha', FILTER_DEFAULT);
     $id_perfil = filter_input(INPUT_POST, 'perfil', FILTER_VALIDATE_INT);
 
-    $nome_condominio = filter_input(INPUT_POST, 'nome_condominio', FILTER_SANITIZE_FULL_SPECIAL_CHARS); 
+    $nome_condominio = filter_input(INPUT_POST, 'nome_condominio', FILTER_DEFAULT); 
     $cep = filter_input(INPUT_POST, 'cep', FILTER_SANITIZE_NUMBER_INT);
 
     $usuarioManager = new Usuario($conexao);
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($usuarioManager->cpfJaExiste($cpf)) {
         $mensagem_erro = 'Este CPF já está cadastrado em nosso sistema.';
     } else {
-        $nome_condominio = filter_input(INPUT_POST, 'nome_condominio', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $nome_condominio = filter_input(INPUT_POST, 'nome_condominio', FILTER_DEFAULT);
         $cep = filter_input(INPUT_POST, 'cep', FILTER_SANITIZE_NUMBER_INT); 
 
         if ($id_perfil == 2) {
@@ -122,7 +122,7 @@ require './inc/header.php';
             ?>
 
             <form action="cadastrar.php" method="POST">
-                
+                <?php print_r($_POST) ?>
                 <div class="mb-3">
                     <label for="perfil" class="form-label">Eu serei:</label>
                     <select id="perfil" name="perfil" class="form-select" required onchange="ajustarCampos()">
@@ -161,8 +161,6 @@ require './inc/header.php';
                     <label for="nome_condominio" class="form-label">Nome do Condomínio a Ser Criado</label>
                     <input type="text" class="form-control" id="nome_condominio" name="nome_condominio" value="<?php echo htmlspecialchars($_POST['nome_condominio'] ?? ''); ?>">
                 </div>
-
-                <hr>
 
                 <div id="campo_cep" class="mb-3" style="display: <?php echo (($_POST['perfil'] ?? '') == 3) ? 'block' : 'none'; ?>;">
                     <label for="cep" class="form-label">CEP do Condomínio</label>
