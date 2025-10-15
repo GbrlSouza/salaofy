@@ -69,4 +69,25 @@ class Agendamento
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function listarPendentesPorCondominio(int $id_condominio): array {
+        $sql = "SELECT a.id_agendamento, s.nome_salao, a.data_evento, a.valor_total, u.nome_completo as morador_nome
+                FROM agendamentos a
+                JOIN saloes s ON a.id_salao = s.id_salao
+                JOIN condominios c ON s.id_condominio = c.id_condominio
+                JOIN usuarios u ON a.id_morador = u.id_usuario
+                WHERE a.status = 'Pendente' AND c.id_condominio = :id_condominio
+                ORDER BY a.data_evento ASC";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id_condominio', $id_condominio, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao listar agendamentos pendentes por condomínio: " . $e->getMessage());
+            return [];
+        }
+    }
 }

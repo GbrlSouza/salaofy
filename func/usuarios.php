@@ -102,4 +102,30 @@ class Usuario {
         
         return $stmt->fetchColumn() > 0;
     }
+
+    public function contarTotalUsuarios(): int {
+        $sql = "SELECT COUNT(*) FROM usuarios";
+        
+        try {
+            $stmt = $this->pdo->query($sql);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erro ao contar total de usuários: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    public function contarUsuariosPorPerfil(int $id_perfil): int {
+        $sql = "SELECT COUNT(*) FROM usuarios WHERE id_perfil = :id_perfil";
+        
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':id_perfil', $id_perfil, PDO::PARAM_INT);
+            $stmt->execute();
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erro ao contar usuários por perfil: " . $e->getMessage());
+            return 0;
+        }
+    }
 }

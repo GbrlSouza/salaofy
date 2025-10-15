@@ -94,4 +94,16 @@ class Condominio {
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function contarTotalCondominios(): int {
+        $sql = "SELECT COUNT(*) FROM condominios";
+        
+        try {
+            $stmt = $this->pdo->query($sql);
+            return (int)$stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erro ao contar total de condomínios: " . $e->getMessage());
+            return 0;
+        }
+    }
 }

@@ -65,7 +65,6 @@ switch ($id_perfil_logado) {
     </style>
 </head>
 <body>
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
         <a class="navbar-brand" href="index.php"><i class="bi bi-building-fill me-2"></i> Salaofy</a>
