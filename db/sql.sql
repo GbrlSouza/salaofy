@@ -1,4 +1,5 @@
 CREATE DATABASE salaofy;
+
 USE salaofy;
 
 CREATE TABLE perfis (
